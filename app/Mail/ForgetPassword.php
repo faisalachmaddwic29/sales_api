@@ -30,6 +30,6 @@ class ForgetPassword extends Mailable
     public function build()
     {
         $subject = 'Permintaan ubah password akun Sales Force';
-        return $this->subject($subject)->view('mails.forgetpassword');;
+        return $this->subject($subject)->view('mails.ForgetPassword')->with('data', $this->data);
     }
 }

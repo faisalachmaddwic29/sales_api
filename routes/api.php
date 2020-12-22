@@ -24,8 +24,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('register', RegisterController::class);
 Route::post('login', LoginController::class);
-Route::post('forget-password', [ForgetPasswordController::class, 'forget']);
+Route::post('forget', [ForgetPasswordController::class, 'forget']);
 Route::post('validate-pin', [ForgetPasswordController::class, 'validatePin']);
+Route::post('forget-password', [ForgetPasswordController::class, 'forgetPassword']);
+
 
 Route::get('provinces', [AddressController::class, 'provinces']);
 Route::get('regencies/{id_province?}', [AddressController::class, 'regencies']);

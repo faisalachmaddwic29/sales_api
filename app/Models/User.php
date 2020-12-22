@@ -59,11 +59,4 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public static function boot()
-    {
-        parent::boot();
-        self::creating(function ($model) {
-            $model->token = Uuid::generate(3, 'test', Uuid::NS_DNS);
-        });
-    }
 }
