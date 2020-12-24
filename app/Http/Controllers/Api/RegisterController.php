@@ -24,8 +24,8 @@ class RegisterController extends Controller
             $user->email = $request->email;
             $user->password = bcrypt($request->password);
             $user->telephone = $request->telephone;
-            $user->id_user_address = $request->id_user_address ?? null;
-            $user->id_user_role = $request->id_user_role ?? null;
+            $user->user_address_id = $request->user_address_id ?? null;
+            $user->user_role_id = $request->user_role_id ?? null;
             $user->status = $request->status ?? 0;
             $user->save();
 
@@ -59,7 +59,6 @@ class RegisterController extends Controller
             'email' => 'required|email|min:5|only_text|unique:user,email',
             'telephone' => 'required|phone|min:7|max:20|unique:user,telephone',
             'password' => 'required|min:8|max:100',
-            'konfirmasi_password' => 'required|min:8|max:100|same:password',
         ];
 
         return $rules;

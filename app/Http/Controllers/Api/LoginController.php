@@ -16,7 +16,6 @@ class LoginController extends Controller
     {
 
         try {
-
             $input = $request->only('email', 'password');
 
             $validator = Validator::make($input, $this->rules());
@@ -25,6 +24,12 @@ class LoginController extends Controller
                 return response_api_form_error('error', $validator->errors());
 
             $user = User::where('email', $request->input('email'))->first();
+            // return $user;
+            if(!$user){
+                return response_api_error('Email dan Password tidak terdaftar', 'invalid_credentials');
+            }
+
+
             if (!Hash::check($request->password, $user->password)) {
                 return response_api_error('Password yang Anda masukan salah', 'invalid_credentials');
             }
@@ -57,7 +62,7 @@ class LoginController extends Controller
     protected function rules()
     {
         $rules = [
-            'email' => 'required|email|min:5|only_text|exists:user,email',
+            'email' => 'required|email|min:5|only_text',
             'password' => 'required|min:8',
         ];
 

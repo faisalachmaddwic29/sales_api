@@ -22,7 +22,7 @@ class AddressController extends Controller
     public function regencies(Request $request)
     {
         try {
-            return response_api_success(DB::table('regencies')->where('id_province', $request->id_province)->orderBy('regency_name', 'asc')->get());
+            return response_api_success(DB::table('regencies')->where('province_id', $request->province_id)->orderBy('regency_name', 'asc')->get());
         } catch (\Exception $e) {
             return response_api_server_error($e->getMessage());
         }
@@ -31,7 +31,7 @@ class AddressController extends Controller
     public function districts(Request $request)
     {
         try {
-            return response_api_success(DB::table('districts')->where('id_regency', $request->id_regency)->orderBy('district_name', 'asc')->get());
+            return response_api_success(DB::table('districts')->where('regency_id', $request->regency_id)->orderBy('district_name', 'asc')->get());
         } catch (\Exception $e) {
             return response_api_server_error($e->getMessage());
         }
@@ -40,7 +40,7 @@ class AddressController extends Controller
     public function villages(Request $request)
     {
         try {
-            return response_api_success(DB::table('villages')->where('id_district', $request->id_district)->orderBy('village_name', 'asc')->get());
+            return response_api_success(DB::table('villages')->where('district_id', $request->district_id)->orderBy('village_name', 'asc')->get());
         } catch (\Exception $e) {
             return response_api_server_error($e->getMessage());
         }

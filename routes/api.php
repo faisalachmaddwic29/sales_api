@@ -25,11 +25,11 @@ use Illuminate\Support\Facades\Route;
 Route::post('register', RegisterController::class);
 Route::post('login', LoginController::class);
 Route::post('forget', [ForgetPasswordController::class, 'forget']);
-Route::post('validate-pin', [ForgetPasswordController::class, 'validatePin']);
-Route::post('forget-password', [ForgetPasswordController::class, 'forgetPassword']);
+Route::post('validate_pin', [ForgetPasswordController::class, 'validatePin']);
+Route::post('forget_password', [ForgetPasswordController::class, 'forgetPassword']);
 
 
 Route::get('provinces', [AddressController::class, 'provinces']);
-Route::get('regencies/{id_province?}', [AddressController::class, 'regencies']);
-Route::get('districts/{id_regency?}', [AddressController::class, 'districts']);
-Route::get('villages/{id_district?}', [AddressController::class, 'villages']);
+Route::get('regencies/{province_id?}', [AddressController::class, 'regencies']);
+Route::get('districts/{regency_id?}', [AddressController::class, 'districts']);
+Route::get('villages/{district_id?}', [AddressController::class, 'villages']);

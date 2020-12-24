@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgetPassword;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -31,14 +32,17 @@ class ForgetPasswordController extends Controller
             $dataEmail = (object)[
                 'email' => $email,
                 'username' => $user->username,
-                'token' => $pin,
+                'pin' => $pin,
                 'email-type' => 'Forget Password',
             ];
 
-            Mail::to($email)->queue(new ForgetPassword(json_encode($dataEmail)));
+            DB::beginTransaction();
+            DB::table('user')->where('email', $email)->update(['pin' => bcrypt($pin)]);
+            DB::commit();
+
+            Mail::to($email)->send(new ForgetPassword($dataEmail));
             return response_api_success([
                 'email' => $email,
-                'pin' => $pin,
             ])->withCookie('pin', $pin, $time);
         } catch (\Exception $e) {
             return response_api_server_error($e->getMessage());
@@ -55,14 +59,12 @@ class ForgetPasswordController extends Controller
 
             if ($validator->fails())
                 return response_api_form_error('error', $validator->errors());
-            // echo $request->pin;
-            if ($request->cookie('pin') == null)
-                return response_api_error('Sorry anda tidak boleh langsung ke halaman validatePin tanpa Memasukan email terlebih dahulu', 'error');
-
-            if ($request->pin == $request->cookie('pin')) {
+            
+            $user = User::where('email', $request->email)->first();
+            if (Hash::check($request->pin, $user->pin)) {
                 return response_api_success(['data' => 'Selamat Anda Berhasil memasukan Pin']);
             } else {
-                return response_api_form_error('Sorry Pin yang anda masukan salah', []);
+                return response_api_form_error('Maaf Pin yang Anda masukan salah', []);
             }
         } catch (\Exception $e) {
             return response_api_server_error($e->getMessage());
@@ -88,7 +90,7 @@ class ForgetPasswordController extends Controller
             // return $email;
 
             DB::beginTransaction();
-            DB::table('user')->where('email', $email)->update(['password' => $password]);
+            DB::table('user')->where('email', $email)->update(['password' => $password , 'pin' => null]);
             DB::commit();
             return response_api_success([], 'Password anda telah berhasil dirubah, mulai sekarang masukan password baru anda untuk login kedalam aplikasi.')->withoutCookie('pin');
         } catch (\Exception $e) {
