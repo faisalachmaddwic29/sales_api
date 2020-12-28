@@ -24,7 +24,6 @@ class LoginController extends Controller
                 return response_api_form_error('error', $validator->errors());
 
             $user = User::where('email', $request->input('email'))->first();
-            // return $user;
             if(!$user){
                 return response_api_error('Email dan Password tidak terdaftar', 'invalid_credentials');
             }
@@ -34,19 +33,18 @@ class LoginController extends Controller
                 return response_api_error('Password yang Anda masukan salah', 'invalid_credentials');
             }
 
-
             if (!$user->status) {
                 return response_api_error('Akun Anda belom diaktifkan oleh Admin', 'user_not_active');
             }
 
 
             $dataSuccess = [
-                'id_user' => $user->id_user,
+                'user_id' => $user->user_id,
                 'username' => $user->username,
                 'email' => $user->email,
                 'telephone' => $user->telephone,
-                'id_user_address' => $user->id_user_address,
-                'id_user_role' => $user->id_user_role,
+                'user_address_id' => $user->user_address_id,
+                'user_role_id' => $user->user_role_id,
                 'gender' => $user->gender,
                 'status' => $user->status,
                 'token' => JWTAuth::attempt($input),
@@ -63,7 +61,7 @@ class LoginController extends Controller
     {
         $rules = [
             'email' => 'required|email|min:5|only_text',
-            'password' => 'required|min:8',
+            'password' => 'required',
         ];
 
         return $rules;
