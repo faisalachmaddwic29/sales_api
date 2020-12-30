@@ -25,7 +25,7 @@ class RegisterController extends Controller
             $user->password = bcrypt($request->password);
             $user->telephone = $request->telephone;
             $user->user_address_id = $request->user_address_id ?? null;
-            $user->user_role_id = $request->user_role_id ?? null;
+            $user->user_role_id = $request->user_role_id ?? 3;
             $user->status = $request->status ?? FALSE;
             $user->save();
 
